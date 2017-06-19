@@ -30,7 +30,6 @@ public class VueMagasin extends JPanel implements ActionListener {
 	private JPanel edition	= new JPanel();
 	private JPanel actions	= new JPanel();
 	private JLabel lbTitre	= new JLabel("Liste des magasins\n");
-	private JButton retour	= new JButton("« Accueil");
 	private JTable tableMagasins;
 	private VueAccueil uneVueAccueil;
 
@@ -49,10 +48,9 @@ public class VueMagasin extends JPanel implements ActionListener {
 	private JLabel labelElig	= new JLabel("Éligible");
 	private JComboBox magElig	= new JComboBox();
 	private JButton btnAjout	= new JButton("Nouveau magasin");
-	private JButton btnModif	= new JButton("Mettre à jour");
+	private JButton btnModif	= new JButton("Mettre à jour");	
 	
-	
-	public VueMagasin(Profil unProfil) {
+	public VueMagasin() {
 		
 		this.setBounds(50, 50, 700, 400);
 		AbstractBorder brdr2 = new TextBubbleBorder(Color.BLACK, 1, 16, 0);
@@ -127,10 +125,6 @@ public class VueMagasin extends JPanel implements ActionListener {
 		this.setBackground( new Color (255, 255, 255) );
 		panneau.setBackground( new Color (255, 255, 255) );
 		edition.setBackground( new Color (255, 255, 255) );
-
-		this.retour.setBounds(0, 0, 100, 20);
-		this.retour.setBackground( new Color (255, 195, 0) );
-		this.add(retour);
 		
 		this.lbTitre.setBounds(20, 20, 200, 20);
 		this.add(lbTitre);
@@ -170,11 +164,6 @@ public class VueMagasin extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==this.retour)
-		{
-			this.setVisible(false);
-			this.uneVueAccueil.setVisible(true);
-		}
 	}
 	
 	public Object [][] extraireMagasins()

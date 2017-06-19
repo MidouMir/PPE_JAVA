@@ -1,16 +1,21 @@
 package vue;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.AbstractBorder;
 
 import controleur.Main;
 import controleur.Profil;
@@ -38,6 +43,13 @@ public class General extends JFrame implements ActionListener {
 	private VueMagasin uneVueMagasin;
 	// private VueClient uneVueClient;
 	// private VueClientEdition uneVueClientEdition;
+	
+	private JButton retour			= new JButton("« Accueil");
+	
+	private JPanel lesActions		= new JPanel();
+	private JButton blockMagasins	= new JButton("Magasins");
+	private JButton blockProduits	= new JButton("Produits");
+	private JButton blockAlerte		= new JButton("Alerte");
 	
 	public General(Profil unProfil) {
 		this.setTitle("Gestion des stocks");
@@ -87,6 +99,33 @@ public class General extends JFrame implements ActionListener {
 		this.itemQuitter.addActionListener(this);
 		this.itemMonProfil.addActionListener(this);
 
+		this.retour.setBounds(0, 0, 100, 40);
+		this.retour.setBackground( new Color (255, 195, 0) );
+		this.retour.addActionListener(this);
+		this.add(retour);
+		this.retour.setVisible(false);
+		
+		AbstractBorder brdr2 = new TextBubbleBorder( new Color (255, 195, 0), 2, 16, 0);
+		retour.setBorder(brdr2);
+		retour.setLayout(null);
+		
+		lesActions.setBounds(75, 150, 670, 200);
+		lesActions.setBackground(new Color(0, 70, 18));
+		lesActions.setLayout(null);		
+		this.add(lesActions);
+
+		lesActions.add(this.blockMagasins);
+		blockMagasins.setBounds(0, 0, 330, 200);
+		blockMagasins.setBackground( new Color (255, 195, 0) );
+		blockMagasins.addActionListener(this);
+		blockMagasins.setFont(new Font("Arial", Font.PLAIN, 40));
+		
+		lesActions.add(this.blockProduits);
+		blockProduits.setBounds(340, 0, 330, 200);
+		blockProduits.setBackground( new Color (255, 195, 0) );
+		blockProduits.addActionListener(this);
+		blockProduits.setFont(new Font("JusticeLeagueWeb", Font.PLAIN, 40));
+		
 		this.setVisible(true);
 	}
 
@@ -107,18 +146,28 @@ public class General extends JFrame implements ActionListener {
 			// this.uneVueClient.setVisible(false);
 			this.uneVueMagasin.setVisible(false);
 			this.uneVueAccueil.setVisible(true);
+			this.retour.setVisible(false);
 		}
 		else if(e.getSource()==this.itemMagasins)
 		{
 			this.uneVueAccueil.setVisible(false);
 			this.uneVueMagasin.setVisible(true);
 			// this.uneVueClient.setVisible(true);
+			this.retour.setVisible(true);
 		}
 		else if(e.getSource()==this.itemProduits)
 		{
 			this.uneVueAccueil.setVisible(false);
 			this.uneVueMagasin.setVisible(true);
 			// this.uneVueClient.setVisible(true);
+			this.retour.setVisible(true);
+		}
+		else if(e.getSource()==retour)
+		{
+			this.uneVueAccueil.setVisible(true);
+			this.uneVueMagasin.setVisible(false);
+			// this.uneVueClient.setVisible(true);
+			retour.setVisible(false);
 		}
 	}
 
