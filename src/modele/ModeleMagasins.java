@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import controleur.Client;
 import controleur.Magasin;
+import controleur.Profil;
 
 public class ModeleMagasins {
 
@@ -24,7 +25,7 @@ public class ModeleMagasins {
 			ResultSet unRes = unStat.executeQuery(requete);
 			while(unRes.next())
 			{
-				int idB					= unRes.getInt("idB");
+				String idB					= unRes.getString("idB");
 				String nomB				= unRes.getString("nomB");
 				String descB			= unRes.getString("descB");
 				String adresseB			= unRes.getString("adresseB");
@@ -46,6 +47,27 @@ public class ModeleMagasins {
 			System.out.println("Erreur d'execution de la requete : " + requete + "\n SQLException: " + exp);
 		}
 		return lesMagasins;
+	}
+	
+	public static void update(String id, String nom, String desc, String adresse, String cp, String ville, String eligible)
+	{
+		String requete = "UPDATE boutique SET nomB = '" + nom + "', descB = '" + desc + "', adresseB = '" + 
+				adresse + "', cpB = '" + cp + "', villeB = '" + ville + "', eligible = '" +
+				eligible + "' WHERE idB = " + id + ";";
+		try
+		{
+			// Bdd uneBdd = new Bdd("localhost", "ppe_food", "root", "");
+			Bdd uneBdd = new Bdd("db312014-sio2dev-food.sql-pro.online.net", "db312014_sio2dev_food", "db92998", "PPE_food");
+			uneBdd.seConnecter();
+			Statement unStat = uneBdd.getMaConnexion().createStatement();
+			int unRes = unStat.executeUpdate(requete);
+			unStat.close();
+			uneBdd.seConnecter();
+		}
+		catch(SQLException exp)
+		{
+			System.out.println("Erreur d'execution de la requete : " + requete + "\n\n"+exp);
+		}
 	}
 
 }

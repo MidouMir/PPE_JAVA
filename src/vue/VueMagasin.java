@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -20,7 +21,9 @@ import javax.swing.border.AbstractBorder;
 
 import controleur.Client;
 import controleur.Magasin;
+import controleur.Main;
 import controleur.Profil;
+import modele.Modele;
 import modele.ModeleClient;
 import modele.ModeleMagasins;
 
@@ -61,7 +64,7 @@ public class VueMagasin extends JPanel implements ActionListener {
 		panneau.setLayout(null);		
 		this.add(panneau);
 		
-		Object[] elements = new Object[]{"", "Actif", "Inactif"};
+		Object[] elements = new Object[]{"", "oui", "non"};
 		magElig = new JComboBox(elements);
 
 		// labels
@@ -76,6 +79,7 @@ public class VueMagasin extends JPanel implements ActionListener {
 			btnAjout.setBackground( new Color (255, 195, 0) );
 		btnModif.setBounds(0, 105, 150, 25);
 			btnModif.setBackground( new Color (255, 195, 0) );
+			btnModif.addActionListener(this);
 
 		edition.add(labelID);
 		edition.add(labelNom);
@@ -87,6 +91,12 @@ public class VueMagasin extends JPanel implements ActionListener {
 		edition.add(btnAjout);
 		edition.add(btnModif);
 
+		
+		// Erreur d'execution de la requete : UPDATE boutique SET nomB = 
+		// 'Paris Rue du Commerce', descB = 'Ouvert 7j/7 de 7H30 à 2H', 
+		// adresseB = '1, rue du Commerce', cpB = '75015', villeB = 'Paris', eligible = 'oui' WHERE idB = 1;
+
+		
 		// champs
 		magID.setBounds(25, 0, 25, 20);
 		magID.setBackground( new Color (255, 195, 0) );
@@ -130,7 +140,7 @@ public class VueMagasin extends JPanel implements ActionListener {
 		this.add(lbTitre);
 		
 		//construction de la JTable
-		String entete[]		= {"ID", "Nom", "Description", "Adresse", "Code postal", "Ville", "Participant"};
+		String entete[]		= {"ID", "Nom", "Détails", "Adresse", "Code postal", "Ville", "Participant"};
 		this.tableMagasins	= new JTable(this.extraireMagasins(), entete);
 		JScrollPane uneScroll	= new JScrollPane(tableMagasins);
 		uneScroll.setBounds(0, 0, 650, 175);
@@ -164,6 +174,10 @@ public class VueMagasin extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		if(e.getSource()==btnModif)
+		{
+			majMagasin();
+		}
 	}
 	
 	public Object [][] extraireMagasins()
@@ -179,13 +193,63 @@ public class VueMagasin extends JPanel implements ActionListener {
 			donnees [i][3]	= unMagasin.getAdresseB();
 			donnees [i][4]	= unMagasin.getCpB();
 			donnees [i][5]	= unMagasin.getVilleB();
+			donnees [i][6]	= unMagasin.getEligible();
+			/*
 			if(unMagasin.getEligible().equals("non")){
 				donnees [i][6]	= "Inactif";
 			}else{
 				donnees [i][6]	= "Actif";
 			}
+			*/
 			i++;
 		}
 		return donnees;
+	}
+	
+	public void majMagasin()
+	{
+		String id		= magID.getText();
+		String nom		= magNom.getText();
+		String desc		= magDesc.getText();
+		String adresse	= magAdres.getText();
+		String cp		= magCP.getText();
+		String ville	= magVille.getText();
+		String eligible	= magElig.getSelectedItem().toString();
+		
+		if(id.equals("") || nom.equals("") || desc.equals("")
+				|| adresse.equals("") || cp.equals("") || ville.equals("") || eligible.equals(""))
+		{
+			JOptionPane.showMessageDialog(this, "Les champs doivent tous être renseignés");
+		}
+		else
+		{
+			ModeleMagasins.update(id, nom, desc, adresse, cp, ville, eligible);
+			magID.setText("");
+			magNom.setText("");
+			magDesc.setText("");
+			magAdres.setText("");
+			magCP.setText("");
+			magVille.setText("");
+			magElig.setSelectedIndex(0);
+		}
+		
+		/*
+		if(unMagasin.getNomB().equals(""))
+		{
+			// this.txtPas.setText("");
+			JOptionPane.showMessageDialog(this, "Erreur dans la mise à jour du magasin " + id);	
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(this, "OK !");
+			magID.setText("");
+			magNom.setText("");
+			magDesc.setText("");
+			magAdres.setText("");
+			magCP.setText("");
+			magVille.setText("");
+			magElig.setSelectedIndex(0);
+		}
+		*/
 	}
 }

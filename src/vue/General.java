@@ -109,7 +109,7 @@ public class General extends JFrame implements ActionListener {
 		retour.setBorder(brdr2);
 		retour.setLayout(null);
 		
-		lesActions.setBounds(75, 150, 670, 200);
+		lesActions.setBounds(65, 150, 670, 200);
 		lesActions.setBackground(new Color(0, 70, 18));
 		lesActions.setLayout(null);		
 		this.add(lesActions);
@@ -141,33 +141,29 @@ public class General extends JFrame implements ActionListener {
 				Main.rendreVisible(true);
 			}
 		}
-		else if(e.getSource()==this.itemMonProfil)
+		else if(e.getSource()==itemMonProfil || e.getSource()==retour)
 		{
 			// this.uneVueClient.setVisible(false);
-			this.uneVueMagasin.setVisible(false);
-			this.uneVueAccueil.setVisible(true);
-			this.retour.setVisible(false);
-		}
-		else if(e.getSource()==this.itemMagasins)
-		{
-			this.uneVueAccueil.setVisible(false);
-			this.uneVueMagasin.setVisible(true);
-			// this.uneVueClient.setVisible(true);
-			this.retour.setVisible(true);
-		}
-		else if(e.getSource()==this.itemProduits)
-		{
-			this.uneVueAccueil.setVisible(false);
-			this.uneVueMagasin.setVisible(true);
-			// this.uneVueClient.setVisible(true);
-			this.retour.setVisible(true);
-		}
-		else if(e.getSource()==retour)
-		{
-			this.uneVueAccueil.setVisible(true);
-			this.uneVueMagasin.setVisible(false);
-			// this.uneVueClient.setVisible(true);
+			uneVueMagasin.setVisible(false);
+			uneVueAccueil.setVisible(true);
 			retour.setVisible(false);
+			lesActions.setVisible(true);
+		}
+		else if(e.getSource()==itemMagasins || e.getSource()==blockMagasins)
+		{
+			uneVueAccueil.setVisible(false);
+			uneVueMagasin.setVisible(true);
+			// this.uneVueClient.setVisible(true);
+			retour.setVisible(true);
+			lesActions.setVisible(false);
+		}
+		else if(e.getSource()==itemProduits || e.getSource()==blockProduits)
+		{
+			uneVueAccueil.setVisible(false);
+			uneVueMagasin.setVisible(true);
+			// this.uneVueClient.setVisible(true);
+			retour.setVisible(true);
+			lesActions.setVisible(false);
 		}
 	}
 

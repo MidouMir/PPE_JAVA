@@ -2,10 +2,10 @@ package controleur;
 
 public class Magasin {
 
-	private int idB;
-	private String nomB, descB, adresseB, villeB, cpB, eligible;
+	// private int idB;
+	private String idB, nomB, descB, adresseB, villeB, cpB, eligible;
 	
-	public Magasin (int idB, String nomB, String descB, String adresseB,
+	public Magasin (String idB, String nomB, String descB, String adresseB,
 			String villeB, String cpB, String eligible){
 		this.idB			= idB;
 		this.nomB			= nomB;
@@ -16,11 +16,11 @@ public class Magasin {
 		this.eligible		= eligible;
 	}
 
-	public int getIdB() {
+	public String getIdB() {
 		return idB;
 	}
 
-	public void setIdB(int idB) {
+	public void setIdB(String idB) {
 		this.idB = idB;
 	}
 
