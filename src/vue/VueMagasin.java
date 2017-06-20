@@ -23,6 +23,7 @@ import controleur.Client;
 import controleur.Magasin;
 import controleur.Main;
 import controleur.Profil;
+import controleur.Tableau;
 import modele.Modele;
 import modele.ModeleClient;
 import modele.ModeleMagasins;
@@ -34,6 +35,9 @@ public class VueMagasin extends JPanel implements ActionListener {
 	private JPanel actions	= new JPanel();
 	private JLabel lbTitre	= new JLabel("Liste des magasins\n");
 	private JTable tableMagasins;
+	
+	private static Tableau contenu;
+	
 	private VueAccueil uneVueAccueil;
 
 	private JLabel labelID		= new JLabel("ID");
@@ -52,6 +56,7 @@ public class VueMagasin extends JPanel implements ActionListener {
 	private JComboBox magElig	= new JComboBox();
 	private JButton btnAjout	= new JButton("Nouveau magasin");
 	private JButton btnModif	= new JButton("Mettre à jour");
+	private JButton btnSuppr	= new JButton("Supprimer");
 	
 	public VueMagasin() {
 		
@@ -81,6 +86,9 @@ public class VueMagasin extends JPanel implements ActionListener {
 		btnModif.setBounds(0, 105, 150, 25);
 			btnModif.setBackground( new Color (255, 195, 0) );
 			btnModif.addActionListener(this);
+		btnSuppr.setBounds(315, 105, 150, 25);
+			btnSuppr.setBackground( new Color (255, 0, 0) );
+			btnSuppr.addActionListener(this);
 
 		edition.add(labelID);
 		edition.add(labelNom);
@@ -91,6 +99,7 @@ public class VueMagasin extends JPanel implements ActionListener {
 		edition.add(labelElig);
 		edition.add(btnAjout);
 		edition.add(btnModif);
+		edition.add(btnSuppr);
 
 		// Erreur d'execution de la requete : UPDATE boutique SET nomB = 
 		// 'Paris Rue du Commerce', descB = 'Ouvert 7j/7 de 7H30 à 2H', 
@@ -99,6 +108,7 @@ public class VueMagasin extends JPanel implements ActionListener {
 		// champs
 		magID.setBounds(25, 0, 25, 20);
 		magID.setBackground( new Color (255, 195, 0) );
+		magID.setEnabled(false);
 		
 		magNom.setBounds(100, 0, 175, 20);
 		magNom.setBackground( new Color (255, 195, 0) );
@@ -140,13 +150,14 @@ public class VueMagasin extends JPanel implements ActionListener {
 		
 		//construction de la JTable
 		String entete[]		= {"ID", "Nom", "Détails", "Adresse", "Code postal", "Ville", "Participant"};
-		this.tableMagasins	= new JTable(this.extraireMagasins(), entete);
+		contenu = new Tableau(this.extraireMagasins(), entete);
+		this.tableMagasins	= new JTable(contenu);
 		JScrollPane uneScroll	= new JScrollPane(tableMagasins);
 		uneScroll.setBounds(0, 0, 650, 175);
 		panneau.add(uneScroll);
 		
 		actions.setBounds(25, 400, 650, 200);
-		actions.setLayout(null);		
+		actions.setLayout(null);
 		this.add(actions);
 		actions.setBackground( new Color (255, 0, 0) );
 
@@ -180,6 +191,17 @@ public class VueMagasin extends JPanel implements ActionListener {
 		else if(e.getSource()==btnAjout)
 		{
 			ajoutMagasin();
+		}
+		else if(e.getSource()==this.btnSuppr)
+		{
+			int retour = JOptionPane.showConfirmDialog(this, "Veux-tu vraiment le supprimer ?", "Suppression", 
+					JOptionPane.WARNING_MESSAGE);
+			if(retour == 0)
+			{
+				int i = tableMagasins.getSelectedRow();
+				contenu.removeRow(i);
+				ModeleMagasins.delete(magID.getText());
+			}
 		}
 	}
 	
@@ -226,6 +248,7 @@ public class VueMagasin extends JPanel implements ActionListener {
 		}
 		else
 		{
+			JOptionPane.showMessageDialog(this, "Magasin mis à jour !");
 			ModeleMagasins.update(id, nom, desc, adresse, cp, ville, eligible);
 			magID.setText("");
 			magNom.setText("");
@@ -236,7 +259,7 @@ public class VueMagasin extends JPanel implements ActionListener {
 			magElig.setSelectedIndex(0);
 		}
 	}
-	
+
 	public void ajoutMagasin()
 	{
 		String nom		= magNom.getText();
@@ -253,6 +276,7 @@ public class VueMagasin extends JPanel implements ActionListener {
 		}
 		else
 		{
+			JOptionPane.showMessageDialog(this, "Magasin ajouté !");
 			ModeleMagasins.insert(nom, desc, adresse, cp, ville, eligible);
 			magNom.setText("");
 			magDesc.setText("");
@@ -260,6 +284,10 @@ public class VueMagasin extends JPanel implements ActionListener {
 			magCP.setText("");
 			magVille.setText("");
 			magElig.setSelectedIndex(0);
+			Magasin unMagasin = ModeleMagasins.selectWhere(nom, cp);
+			Object[] donnees = { unMagasin.getIdB(), unMagasin.getNomB(), unMagasin.getDescB(), unMagasin.getAdresseB(), 
+					unMagasin.getCpB(), unMagasin.getVilleB(), unMagasin.getEligible() };
+			contenu.addRow(donnees);
 		}
 	}
 }

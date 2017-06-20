@@ -99,7 +99,6 @@ public class VueConnex extends JPanel implements ActionListener, KeyListener {
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(this, "Connexion réussie.\n Bienvenue "+unProfil.getNomComplet()+" !");
 			this.txtLog.setText("");
 			this.txtPas.setText("");
 			//new General(unProfil);

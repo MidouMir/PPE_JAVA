@@ -18,7 +18,7 @@ public class ModeleMagasins {
 		try
 		{
 			// host, database, user, pass
-			// Bdd uneBdd = new Bdd("db312014-sio2dev-food.sql-pro.online.net", "db312014_sio2dev_food", "db92998", "Midou1405");
+			// Bdd uneBdd = new Bdd("db312014-sio2dev-food.sql-pro.online.net", "db312014_sio2dev_food", "db92998", "PPE_food");
 			Bdd uneBdd = new Bdd("localhost", "ppe_food", "root", "");
 			uneBdd.seConnecter();
 			Statement unStat = uneBdd.getMaConnexion().createStatement();
@@ -66,14 +66,14 @@ public class ModeleMagasins {
 		}
 		catch(SQLException exp)
 		{
-			System.out.println("Impossible de mettre à jour le magasin\n\n"+exp);
+			System.out.println("Impossible de mettre à jour le magasin\n"+exp);
 		}
 	}
 	
 	public static void insert(String nom, String desc, String adresse, String cp, String ville, String eligible)
 	{
 		String requete = "INSERT INTO boutique (nomB, descB, adresseB, cpB, villeB, eligible) VALUES"
-				+ "('"+ nom + "', '" + desc + "', '" + adresse + "', '" + cp + "', '" + ville + "', '" + eligible + "' ;";
+				+ "('"+ nom + "', '" + desc + "', '" + adresse + "', '" + cp + "', '" + ville + "', '" + eligible + "') ;";
 		try
 		{
 			Bdd uneBdd = new Bdd("localhost", "ppe_food", "root", "");
@@ -86,8 +86,54 @@ public class ModeleMagasins {
 		}
 		catch(SQLException exp)
 		{
-			System.out.println("Impossible d'ajouter un magasin\n\n"+exp);
+			System.out.println("Impossible d'ajouter un magasin\n"+exp);
 		}
+	}
+	
+	public static void delete(String id)
+	{
+		String requete = "DELETE FROM boutique WHERE idB = '" + id + "';";
+		try
+		{
+			Bdd uneBdd = new Bdd("localhost", "ppe_food", "root", "");
+			// Bdd uneBdd = new Bdd("db312014-sio2dev-food.sql-pro.online.net", "db312014_sio2dev_food", "db92998", "PPE_food");
+			uneBdd.seConnecter();
+			Statement unStat = uneBdd.getMaConnexion().createStatement();
+			unStat.execute(requete);
+			unStat.close();
+			uneBdd.seConnecter();
+		}
+		catch(SQLException exp)
+		{
+			System.out.println("Impossible de supprimer un magasin\n"+exp);
+		}
+	}
+
+	public static Magasin selectWhere(String nom, String cp) {
+		String requete = "SELECT * FROM boutique WHERE nomB = '" + nom + "' AND cpB = '"+ cp +"' ;";
+		Magasin unMagasin = null;
+		try
+		{
+			Bdd uneBdd = new Bdd("localhost", "ppe_food", "root", "");
+			// Bdd uneBdd = new Bdd("db312014-sio2dev-food.sql-pro.online.net", "db312014_sio2dev_food", "db92998", "PPE_food");
+			uneBdd.seConnecter();
+			Statement unStat = uneBdd.getMaConnexion().createStatement();
+			ResultSet unRes = unStat.executeQuery(requete);
+			if(unRes.next())
+			{
+				unMagasin = new Magasin(unRes.getString("idB"), unRes.getString("nomB"), unRes.getString("descB"), 
+						unRes.getString("adresseB"), unRes.getString("cpB"), unRes.getString("villeB"),
+						unRes.getString("eligible"));
+			}
+			unRes.close();
+			unStat.close();
+			uneBdd.seConnecter();
+		}
+		catch(SQLException exp)
+		{
+			System.out.println("Impossible de supprimer un magasin\n"+exp);
+		}
+		return unMagasin;
 	}
 
 }
