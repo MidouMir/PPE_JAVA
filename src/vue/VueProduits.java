@@ -35,7 +35,7 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 	private JTable tableProduits;
 
 	private JLabel labelID		= new JLabel("ID");
-	private JTextArea prodID		= new JTextArea("");
+	private JTextArea prodID	= new JTextArea("");
 	private JLabel labelNom		= new JLabel("Nom");
 	private JTextArea prodNom	= new JTextArea("");
 	private JLabel labelDesc	= new JLabel("Description");

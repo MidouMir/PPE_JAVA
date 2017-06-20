@@ -87,7 +87,8 @@ public class VueMagasin extends JPanel implements ActionListener {
 			btnModif.setBackground( new Color (255, 195, 0) );
 			btnModif.addActionListener(this);
 		btnSuppr.setBounds(315, 105, 150, 25);
-			btnSuppr.setBackground( new Color (255, 0, 0) );
+			btnSuppr.setBackground( new Color (244, 67, 54) );
+			btnSuppr.setForeground( new Color (255, 255, 255) );
 			btnSuppr.addActionListener(this);
 
 		edition.add(labelID);
@@ -175,7 +176,6 @@ public class VueMagasin extends JPanel implements ActionListener {
 				magVille.setText(tableMagasins.getValueAt(i, 5).toString());
 				magElig.setSelectedItem(tableMagasins.getValueAt(i, 6).toString());
 			}
-			
 		});
 		
 		this.setVisible(false);
@@ -194,13 +194,27 @@ public class VueMagasin extends JPanel implements ActionListener {
 		}
 		else if(e.getSource()==this.btnSuppr)
 		{
-			int retour = JOptionPane.showConfirmDialog(this, "Veux-tu vraiment le supprimer ?", "Suppression", 
-					JOptionPane.WARNING_MESSAGE);
-			if(retour == 0)
+			if(magID.getText().equals(""))
 			{
-				int i = tableMagasins.getSelectedRow();
-				contenu.removeRow(i);
-				ModeleMagasins.delete(magID.getText());
+				JOptionPane.showMessageDialog(this, "Aucun magasin n'est sélectionné");
+			}
+			else
+			{
+				int retour = JOptionPane.showConfirmDialog(this, "Veux-tu vraiment le supprimer ?", "Suppression", 
+						JOptionPane.WARNING_MESSAGE);
+				if(retour == 0)
+				{
+					int i = tableMagasins.getSelectedRow();
+					contenu.removeRow(i);
+					ModeleMagasins.delete(magID.getText());
+					magID.setText("");
+					magNom.setText("");
+					magDesc.setText("");
+					magAdres.setText("");
+					magCP.setText("");
+					magVille.setText("");
+					magElig.setSelectedIndex(0);
+				}
 			}
 		}
 	}
