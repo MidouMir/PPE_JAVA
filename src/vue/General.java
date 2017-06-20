@@ -41,6 +41,7 @@ public class General extends JFrame implements ActionListener {
 	
 	private VueAccueil uneVueAccueil;
 	private VueMagasin uneVueMagasin;
+	private VueProduits uneVueProduit;
 	// private VueClient uneVueClient;
 	// private VueClientEdition uneVueClientEdition;
 	
@@ -68,6 +69,9 @@ public class General extends JFrame implements ActionListener {
 		
 		this.uneVueMagasin	= new VueMagasin();
 		this.add(uneVueMagasin);
+		
+		this.uneVueProduit	= new VueProduits();
+		this.add(uneVueProduit);
 		
 		// this.setContentPane(this.uneVueAccueil);
 		// this.uneVueClient	= new VueClient();
@@ -143,9 +147,9 @@ public class General extends JFrame implements ActionListener {
 		}
 		else if(e.getSource()==itemMonProfil || e.getSource()==retour)
 		{
-			// this.uneVueClient.setVisible(false);
-			uneVueMagasin.setVisible(false);
 			uneVueAccueil.setVisible(true);
+			uneVueMagasin.setVisible(false);
+			uneVueProduit.setVisible(false);
 			retour.setVisible(false);
 			lesActions.setVisible(true);
 		}
@@ -153,15 +157,15 @@ public class General extends JFrame implements ActionListener {
 		{
 			uneVueAccueil.setVisible(false);
 			uneVueMagasin.setVisible(true);
-			// this.uneVueClient.setVisible(true);
+			uneVueProduit.setVisible(false);
 			retour.setVisible(true);
 			lesActions.setVisible(false);
 		}
 		else if(e.getSource()==itemProduits || e.getSource()==blockProduits)
 		{
 			uneVueAccueil.setVisible(false);
-			uneVueMagasin.setVisible(true);
-			// this.uneVueClient.setVisible(true);
+			uneVueMagasin.setVisible(false);
+			uneVueProduit.setVisible(true);
 			retour.setVisible(true);
 			lesActions.setVisible(false);
 		}

@@ -2,22 +2,54 @@ package controleur;
 
 public class Produits {
 
-	private int idU, cpU, nbCommande;
-	private String nomU, prenomU, siret, commentaires, adresseFacturation, mailU, typeCompte;
+	// private int idP;
+	private String idP, nomP, descP, prixP, photoP;
 
-	public Produits (int idU, int cpU, int nbCommande,
-			String nomU, String prenomU, String siret,
-			String commentaires, String adresseFacturation,
-			String mailU, String typeCompte){
-		this.idU				= idU;
-		this.nomU				= nomU;
-		this.prenomU			= prenomU;
-		this.siret				= siret;
-		this.commentaires		= commentaires;
-		this.adresseFacturation	= adresseFacturation;
-		this.typeCompte			= typeCompte;
-		this.mailU				= mailU;
-		this.cpU				= cpU;
-		this.nbCommande			= nbCommande;
+	public Produits (String idP, String nomP, String descP, String prixP, String photoP){
+		this.idP				= idP;
+		this.nomP				= nomP;
+		this.descP				= descP;
+		this.prixP				= prixP;
+		this.photoP				= photoP;
+	}
+
+	public String getIdP() {
+		return idP;
+	}
+
+	public void setIdP(String idP) {
+		this.idP = idP;
+	}
+
+	public String getNomP() {
+		return nomP;
+	}
+
+	public void setNomP(String nomP) {
+		this.nomP = nomP;
+	}
+
+	public String getDescP() {
+		return descP;
+	}
+
+	public void setDescP(String descP) {
+		this.descP = descP;
+	}
+
+	public String getPrixP() {
+		return prixP;
+	}
+
+	public void setPrixP(String prixP) {
+		this.prixP = prixP;
+	}
+
+	public String getPhotoP() {
+		return photoP;
+	}
+
+	public void setPhotoP(String photoP) {
+		this.photoP = photoP;
 	}
 }

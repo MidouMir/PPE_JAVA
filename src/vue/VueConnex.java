@@ -29,6 +29,7 @@ public class VueConnex extends JPanel implements ActionListener, KeyListener {
 
 	private JButton btAnnuler		= new JButton("Annuler");
 	private JButton btValider		= new JButton("Connexion");
+	private static General uneVueGenerale;
 	
 	public VueConnex()
 	{
@@ -101,7 +102,8 @@ public class VueConnex extends JPanel implements ActionListener, KeyListener {
 			JOptionPane.showMessageDialog(this, "Connexion réussie.\n Bienvenue "+unProfil.getNomComplet()+" !");
 			this.txtLog.setText("");
 			this.txtPas.setText("");
-			new General(unProfil);
+			//new General(unProfil);
+			uneVueGenerale = new General(unProfil);
 			Main.rendreVisible(false);
 		}
 	}
@@ -124,5 +126,10 @@ public class VueConnex extends JPanel implements ActionListener, KeyListener {
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public static General getUneVueGenerale()
+	{
+		return uneVueGenerale;
 	}
 }

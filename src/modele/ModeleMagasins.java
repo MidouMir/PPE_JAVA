@@ -56,8 +56,8 @@ public class ModeleMagasins {
 				eligible + "' WHERE idB = " + id + ";";
 		try
 		{
-			// Bdd uneBdd = new Bdd("localhost", "ppe_food", "root", "");
-			Bdd uneBdd = new Bdd("db312014-sio2dev-food.sql-pro.online.net", "db312014_sio2dev_food", "db92998", "PPE_food");
+			Bdd uneBdd = new Bdd("localhost", "ppe_food", "root", "");
+			// Bdd uneBdd = new Bdd("db312014-sio2dev-food.sql-pro.online.net", "db312014_sio2dev_food", "db92998", "PPE_food");
 			uneBdd.seConnecter();
 			Statement unStat = uneBdd.getMaConnexion().createStatement();
 			int unRes = unStat.executeUpdate(requete);
@@ -66,7 +66,27 @@ public class ModeleMagasins {
 		}
 		catch(SQLException exp)
 		{
-			System.out.println("Erreur d'execution de la requete : " + requete + "\n\n"+exp);
+			System.out.println("Impossible de mettre à jour le magasin\n\n"+exp);
+		}
+	}
+	
+	public static void insert(String nom, String desc, String adresse, String cp, String ville, String eligible)
+	{
+		String requete = "INSERT INTO boutique (nomB, descB, adresseB, cpB, villeB, eligible) VALUES"
+				+ "('"+ nom + "', '" + desc + "', '" + adresse + "', '" + cp + "', '" + ville + "', '" + eligible + "' ;";
+		try
+		{
+			Bdd uneBdd = new Bdd("localhost", "ppe_food", "root", "");
+			// Bdd uneBdd = new Bdd("db312014-sio2dev-food.sql-pro.online.net", "db312014_sio2dev_food", "db92998", "PPE_food");
+			uneBdd.seConnecter();
+			Statement unStat = uneBdd.getMaConnexion().createStatement();
+			unStat.execute(requete);
+			unStat.close();
+			uneBdd.seConnecter();
+		}
+		catch(SQLException exp)
+		{
+			System.out.println("Impossible d'ajouter un magasin\n\n"+exp);
 		}
 	}
 

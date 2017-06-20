@@ -51,7 +51,7 @@ public class VueMagasin extends JPanel implements ActionListener {
 	private JLabel labelElig	= new JLabel("Éligible");
 	private JComboBox magElig	= new JComboBox();
 	private JButton btnAjout	= new JButton("Nouveau magasin");
-	private JButton btnModif	= new JButton("Mettre à jour");	
+	private JButton btnModif	= new JButton("Mettre à jour");
 	
 	public VueMagasin() {
 		
@@ -77,6 +77,7 @@ public class VueMagasin extends JPanel implements ActionListener {
 		labelElig.setBounds(0, 70, 50, 20);
 		btnAjout.setBounds(160, 105, 150, 25);
 			btnAjout.setBackground( new Color (255, 195, 0) );
+			btnAjout.addActionListener(this);
 		btnModif.setBounds(0, 105, 150, 25);
 			btnModif.setBackground( new Color (255, 195, 0) );
 			btnModif.addActionListener(this);
@@ -91,11 +92,9 @@ public class VueMagasin extends JPanel implements ActionListener {
 		edition.add(btnAjout);
 		edition.add(btnModif);
 
-		
 		// Erreur d'execution de la requete : UPDATE boutique SET nomB = 
 		// 'Paris Rue du Commerce', descB = 'Ouvert 7j/7 de 7H30 à 2H', 
 		// adresseB = '1, rue du Commerce', cpB = '75015', villeB = 'Paris', eligible = 'oui' WHERE idB = 1;
-
 		
 		// champs
 		magID.setBounds(25, 0, 25, 20);
@@ -178,6 +177,10 @@ public class VueMagasin extends JPanel implements ActionListener {
 		{
 			majMagasin();
 		}
+		else if(e.getSource()==btnAjout)
+		{
+			ajoutMagasin();
+		}
 	}
 	
 	public Object [][] extraireMagasins()
@@ -232,17 +235,25 @@ public class VueMagasin extends JPanel implements ActionListener {
 			magVille.setText("");
 			magElig.setSelectedIndex(0);
 		}
+	}
+	
+	public void ajoutMagasin()
+	{
+		String nom		= magNom.getText();
+		String desc		= magDesc.getText();
+		String adresse	= magAdres.getText();
+		String cp		= magCP.getText();
+		String ville	= magVille.getText();
+		String eligible	= magElig.getSelectedItem().toString();
 		
-		/*
-		if(unMagasin.getNomB().equals(""))
+		if(nom.equals("") || desc.equals("") || adresse.equals("") || 
+				cp.equals("") || ville.equals("") || eligible.equals(""))
 		{
-			// this.txtPas.setText("");
-			JOptionPane.showMessageDialog(this, "Erreur dans la mise à jour du magasin " + id);	
+			JOptionPane.showMessageDialog(this, "Les champs doivent tous être renseignés");
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(this, "OK !");
-			magID.setText("");
+			ModeleMagasins.insert(nom, desc, adresse, cp, ville, eligible);
 			magNom.setText("");
 			magDesc.setText("");
 			magAdres.setText("");
@@ -250,6 +261,5 @@ public class VueMagasin extends JPanel implements ActionListener {
 			magVille.setText("");
 			magElig.setSelectedIndex(0);
 		}
-		*/
 	}
 }
