@@ -7,11 +7,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -150,6 +157,53 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 			
 		});
 		
+
+        
+		btnPhoto.addActionListener(new ActionListener() {
+	      public void actionPerformed(ActionEvent e) {
+	        JFileChooser fileChooser = new JFileChooser();
+	 
+	        // For Directory
+	        // fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+	 
+	        // For File
+	        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+	 
+	        fileChooser.setAcceptAllFileFilterUsed(false);
+	 
+	        int rVal = fileChooser.showOpenDialog(null);
+	        if (rVal == JFileChooser.APPROVE_OPTION) {
+	        	File selectedFile = fileChooser.getSelectedFile();
+	        	String filePath = selectedFile.getAbsolutePath();
+	        	InputStream inStream = null;
+                OutputStream outStream = null;
+                
+                try{
+                    File source =new File(filePath);
+                    File dest = new File(System.getProperty("user.dir") + selectedFile.getName());
+                    inStream = new FileInputStream(source);
+                    outStream = new FileOutputStream(dest);
+
+                    byte[] buffer = new byte[1024];
+
+                    int length;
+                    while ((length = inStream.read(buffer)) > 0){
+                        outStream.write(buffer, 0, length);
+                    }
+
+                    if (inStream != null)inStream.close();
+                    if (outStream != null)outStream.close();
+                    System.out.println("File Copied..");
+                }catch(IOException e1){
+                    e1.printStackTrace();
+                }
+	        	prodPhoto.setText(fileChooser.getSelectedFile().toString());
+                // prodPhoto.setText("File Loaded: " + selectedFile.getName() + "\n\n\n" + "Hit 'Run Code'");
+            }
+            else System.out.println("Failed to Load");
+	      }
+	    });
+		
 		this.setVisible(false);
 	}
 	@Override
@@ -161,11 +215,24 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 		}
 		else if (e.getSource()==btnPhoto)
 		{
+			/*
 			FileDialog unFileDialog = new FileDialog(VueConnex.getUneVueGenerale());
 			unFileDialog.setVisible(true);
+			unFileDialog.setFile("*.jpg;*.png");
 			String dossier = unFileDialog.getDirectory();
 			String fichier = unFileDialog.getFile();
 			prodPhoto.setText(dossier + fichier);
+			
+			int returnVal = fc.showOpenDialog(this);
+
+	        if (returnVal == JFileChooser.APPROVE_OPTION) {
+	            File file = fc.getSelectedFile();
+	            //This is where a real application would open the file.
+	            log.append("Opening: " + file.getName() + "." + newline);
+	        } else {
+	            log.append("Open command cancelled by user." + newline);
+	        }
+			*/
 		}
 	}
 	public Object [][] extraireProduits()
