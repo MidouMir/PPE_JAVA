@@ -13,7 +13,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JButton;
@@ -28,7 +31,9 @@ import javax.swing.JTextArea;
 import javax.swing.border.AbstractBorder;
 
 import controleur.Client;
+import controleur.Magasin;
 import controleur.Produits;
+import controleur.Tableau;
 import modele.ModeleClient;
 import modele.ModeleMagasins;
 import modele.ModeleProduits;
@@ -40,6 +45,8 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 	private JPanel actions	= new JPanel();
 	private JLabel lbTitre	= new JLabel("Liste des produits\n");
 	private JTable tableProduits;
+	
+	private static Tableau contenu;
 
 	private JLabel labelID		= new JLabel("ID");
 	private JTextArea prodID	= new JTextArea("");
@@ -51,6 +58,8 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 	private JTextArea prodPrix	= new JTextArea("");
 	private JLabel labelPhoto	= new JLabel("Photo");
 	private JTextArea prodPhoto	= new JTextArea("");
+	private JLabel labelCat		= new JLabel("Photo");
+	private JTextArea prodCat	= new JTextArea("");
 	private JButton btnPhoto	= new JButton("+");
 	private JButton btnAjout	= new JButton("Nouveau produit");
 	private JButton btnModif	= new JButton("Mettre à jour");
@@ -131,8 +140,9 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 		this.add(lbTitre);
 		
 		//construction de la JTable
-		String entete[]		= {"ID", "Nom", "Desc", "Prix", "Photo"};
-		this.tableProduits	= new JTable(this.extraireProduits(), entete);
+		String entete[]		= {"ID", "Nom", "Desc", "Prix", "Photo", "Catégorie"};
+		contenu = new Tableau(this.extraireProduits(), entete);
+		this.tableProduits	= new JTable(contenu);
 		JScrollPane uneScroll	= new JScrollPane(tableProduits);
 		uneScroll.setBounds(0, 0, 650, 175);
 		panneau.add(uneScroll);
@@ -156,8 +166,6 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 			}
 			
 		});
-		
-
         
 		btnPhoto.addActionListener(new ActionListener() {
 	      public void actionPerformed(ActionEvent e) {
@@ -170,17 +178,39 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 	        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 	 
 	        fileChooser.setAcceptAllFileFilterUsed(false);
-	 
+	        	 
 	        int rVal = fileChooser.showOpenDialog(null);
 	        if (rVal == JFileChooser.APPROVE_OPTION) {
 	        	File selectedFile = fileChooser.getSelectedFile();
 	        	String filePath = selectedFile.getAbsolutePath();
 	        	InputStream inStream = null;
                 OutputStream outStream = null;
+                String titre	= "";
+                int tailleTab	= tableProduits.getRowCount();
+                String nouvelID	= String.valueOf(tailleTab + 1);
+                
+                if( prodID.getText().equals("") )
+                {
+                    titre = nouvelID;
+                }
+                else
+                {
+                    titre = prodID.getText();
+                }
+                
+                DateFormat leFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                Date laDate = new Date();
+                
+                String extension = "";
+                int i = selectedFile.getName().lastIndexOf('.');
+                if (i > 0) {
+                    extension = selectedFile.getName().substring(i+1);
+                }
                 
                 try{
                     File source =new File(filePath);
-                    File dest = new File(System.getProperty("user.dir") + selectedFile.getName());
+                    File dest = new File( "C:\\wamp64\\www\\mcdeliver\\images\\produits\\" + titre + "-" + leFormat.format(laDate) + "." + extension );
+                    // File dest = new File( System.getProperty("user.home") + "\\" + selectedFile.getName());
                     inStream = new FileInputStream(source);
                     outStream = new FileOutputStream(dest);
 
@@ -193,12 +223,12 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 
                     if (inStream != null)inStream.close();
                     if (outStream != null)outStream.close();
-                    System.out.println("File Copied..");
+                    System.out.println("File Copied !");
                 }catch(IOException e1){
                     e1.printStackTrace();
                 }
-	        	prodPhoto.setText(fileChooser.getSelectedFile().toString());
-                // prodPhoto.setText("File Loaded: " + selectedFile.getName() + "\n\n\n" + "Hit 'Run Code'");
+                // prodPhoto.setText(fileChooser.getSelectedFile().toString());
+                prodPhoto.setText( "/images/produits/" + titre + "-" + leFormat.format(laDate) + "." + extension );
             }
             else System.out.println("Failed to Load");
 	      }
@@ -213,33 +243,13 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 		{
 			majProduits();
 		}
-		else if (e.getSource()==btnPhoto)
-		{
-			/*
-			FileDialog unFileDialog = new FileDialog(VueConnex.getUneVueGenerale());
-			unFileDialog.setVisible(true);
-			unFileDialog.setFile("*.jpg;*.png");
-			String dossier = unFileDialog.getDirectory();
-			String fichier = unFileDialog.getFile();
-			prodPhoto.setText(dossier + fichier);
-			
-			int returnVal = fc.showOpenDialog(this);
-
-	        if (returnVal == JFileChooser.APPROVE_OPTION) {
-	            File file = fc.getSelectedFile();
-	            //This is where a real application would open the file.
-	            log.append("Opening: " + file.getName() + "." + newline);
-	        } else {
-	            log.append("Open command cancelled by user." + newline);
-	        }
-			*/
-		}
 	}
 	public Object [][] extraireProduits()
 	{
 		ArrayList<Produits> lesProduits	= ModeleProduits.selectAll();
-		Object [][]donnees	= new Object[lesProduits.size()][5];
+		Object [][]donnees	= new Object[lesProduits.size()][6];
 		int i=0;
+		String laCat = "";
 		for(Produits unProduit : lesProduits)
 		{
 			donnees [i][0]	= unProduit.getIdP();
@@ -247,6 +257,17 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 			donnees [i][2]	= unProduit.getDescP();
 			donnees [i][3]	= unProduit.getPrixP();
 			donnees [i][4]	= unProduit.getPhotoP();
+			if(unProduit.getCatP().equals("1")){
+				laCat = "Sandwich";
+			}
+			else if(unProduit.getCatP().equals("2")){
+				laCat = "Boissons";
+			}
+			else if(unProduit.getCatP().equals("3")){
+				laCat = "Desserts";
+			}
+			// donnees [i][5]	= unProduit.getCatP();
+			donnees [i][5]	= laCat;
 			i++;
 		}
 		return donnees;
@@ -259,20 +280,22 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 		String desc		= prodDesc.getText();
 		String prix		= prodPrix.getText();
 		String photo	= prodPhoto.getText();
+		String categ	= prodCat.getText();
 		
-		if(id.equals("") || nom.equals("") || desc.equals("") || prix.equals("") || photo.equals(""))
+		if(id.equals("") || nom.equals("") || desc.equals("") || prix.equals("") || photo.equals("") || categ.equals(""))
 		{
 			JOptionPane.showMessageDialog(this, "Les champs doivent tous être renseignés");
 		}
 		else
 		{
 			JOptionPane.showMessageDialog(this, "Produit mis à jour !");
-			ModeleProduits.update(id, nom, desc, prix, photo);
+			ModeleProduits.update(id, nom, desc, prix, photo, categ);
 			prodID.setText("");
 			prodNom.setText("");
 			prodDesc.setText("");
 			prodPrix.setText("");
 			prodPhoto.setText("");
+			prodCat.setText("");
 		}
 	}
 	
@@ -283,20 +306,26 @@ public class VueProduits extends JPanel implements ActionListener, MouseListener
 		String desc		= prodDesc.getText();
 		String prix		= prodPrix.getText();
 		String photo	= prodPhoto.getText();
+		String cat		= prodCat.getText();
 		
-		if(id.equals("") || nom.equals("") || desc.equals("") || prix.equals("") || photo.equals(""))
+		if(id.equals("") || nom.equals("") || desc.equals("") || prix.equals("") || photo.equals("") || cat.equals(""))
 		{
 			JOptionPane.showMessageDialog(this, "Les champs doivent tous être renseignés");
 		}
 		else
 		{
 			JOptionPane.showMessageDialog(this, "Produit ajouté !");
-			ModeleProduits.update(id, nom, desc, prix, photo);
+			ModeleProduits.update(id, nom, desc, prix, photo, cat);
 			prodID.setText("");
 			prodNom.setText("");
 			prodDesc.setText("");
 			prodPrix.setText("");
 			prodPhoto.setText("");
+			prodCat.setText("");
+			Produits unProduit = ModeleProduits.selectWhere(nom, prix);
+			Object[] donnees = { unProduit.getIdP(), unProduit.getNomP(), unProduit.getDescP(),
+					unProduit.getPrixP(), unProduit.getPhotoP(), unProduit.getCatP() };
+			contenu.addRow(donnees);
 		}
 	}
 	
